@@ -1,3 +1,10 @@
+" Public Interface:
+" =================
+command! SortQuire call s:SortQuire_sort()
+
+" Internal Functions:
+" ===================
+
 function! Replace_Requires(requires)
   execute "normal! d%i(:require " . get(a:requires, 0) . "\r"
   normal! k
@@ -15,7 +22,7 @@ function! Go_To_Require_Line()
   execute "normal! gg/require\<cr>"
 endfunction
 
-function! SortRequire()
+function! s:SortQuire_sort()
   let l:current_register = @0
   normal! mt
   call Go_To_Require_Line()
