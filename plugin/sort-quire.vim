@@ -22,7 +22,7 @@ function! Go_To_Require_Line()
   execute "normal! gg/require\<cr>"
 endfunction
 
-function! s:SortQuire_sort()
+function! s:SortQuire_sort_clojure()
   let l:current_register = @0
   normal! mt
   call Go_To_Require_Line()
@@ -40,3 +40,10 @@ function! s:SortQuire_sort()
   call setreg('0', l:current_register)
 endfunction
 
+function! s:SortQuire_sort()
+  if &ft == "clojure"
+    call s:SortQuire_sort_clojure()
+  else
+    echo "SortQuire: " . &ft . " not supported :("
+  endif
+endfunction
