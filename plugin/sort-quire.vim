@@ -35,6 +35,36 @@ function! s:SortQuire_sort_clojure()
   call Go_To_Require_Line()
   normal! 0wy%
   execute "normal! \<c-v>\<s-%>="
+
+  normal! gg
+
+  if search("(:import [")
+    normal y%
+    let l:import_block = @0
+    let imps = strpart(l:import_block, 9, strlen(l:import_block) - 8)
+    let arr_imports = split(imps, "  ")
+    let imports = sort(
+      \ map(map(filter(copy(arr_imports), 'v:val != ""'),
+      \         'strpart(v:val, 0, strlen(v:val) - 1)'),
+      \     'substitute(v:val, "^\s*", "", "")'))
+
+    execute "normal! d%i\r(:import" . get(imports, 0) . "\r"
+    normal! k
+    let index = 1
+    let imports_length = len(imports) - 1
+    while index < imports_length
+      put = get(imports, index)
+      let index += 1
+    endwhile
+    normal! j
+    execute "normal! i" . get(imports, index) . ")"
+
+    normal! y%
+    execute "normal! \<c-v>\<s-%>="
+    normal! kf)ld$
+  endif
+  %s/)\s\+)/))/g
+
   call setreg('0', l:current_register)
 endfunction
 
