@@ -24,7 +24,6 @@ endfunction
 
 function! s:SortQuire_sort_clojure()
   let l:current_register = @0
-  normal! mt
   call Go_To_Require_Line()
   normal! 0wy%
   let l:require_block = @0
@@ -36,7 +35,6 @@ function! s:SortQuire_sort_clojure()
   call Go_To_Require_Line()
   normal! 0wy%
   execute "normal! \<c-v>\<s-%>="
-  normal! `t
   call setreg('0', l:current_register)
 endfunction
 
