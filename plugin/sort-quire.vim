@@ -52,7 +52,7 @@ function! SortQuire_sort_clojure_imports()
 endfunction
 
 function! s:SortQuire_sort_clojure()
-  let l:current_register = @0
+  let l:current_register = @"
   call Go_To_Require_Line()
   normal! 0wy%
   let l:require_block = @0
@@ -73,7 +73,7 @@ function! s:SortQuire_sort_clojure()
     %s/)\s\+)/))/g
   endif
 
-  call setreg('0', l:current_register)
+  call setreg('"', l:current_register)
 endfunction
 
 function! s:SortQuire_sort()
