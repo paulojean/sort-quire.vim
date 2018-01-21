@@ -5,7 +5,7 @@ command! SortQuire call s:SortQuire_sort()
 " Internal Functions:
 " ===================
 
-function! SortQuire_sort_clojure_fill(items)
+function! s:SortQuire_sort_clojure_fill(items)
   normal! k
   let index = 1
   let items_length = len(a:items) - 1
@@ -17,16 +17,16 @@ function! SortQuire_sort_clojure_fill(items)
   execute "normal! i" . get(a:items, index) . ")"
 endfunction
 
-function! Replace_Requires(requires)
+function! s:Replace_Requires(requires)
   execute "normal! d%i(:require " . get(a:requires, 0) . "\r"
   call SortQuire_sort_clojure_fill(a:requires)
 endfunction
 
-function! Go_To_Require_Line()
+function! s:Go_To_Require_Line()
   execute "normal! gg/require\<cr>"
 endfunction
 
-function! SortQuire_sort_clojure_imports()
+function! s:SortQuire_sort_clojure_imports()
   if search("(:import \[(|[\]")
     normal y%
     let l:import_block = @0
