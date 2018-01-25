@@ -19,7 +19,7 @@ endfunction
 
 function! s:Replace_Requires(requires)
   execute "normal! d%i(:require " . get(a:requires, 0) . "\r"
-  call SortQuire_sort_clojure_fill(a:requires)
+  call s:SortQuire_sort_clojure_fill(a:requires)
 endfunction
 
 function! s:Go_To_Require_Line()
@@ -42,7 +42,7 @@ function! s:SortQuire_sort_clojure_imports()
       execute "normal! d%i\r(:import " . get(imports, 0) . ")"
     else
       execute "normal! d%i\r(:import " . get(imports, 0) . "\r"
-      call SortQuire_sort_clojure_fill(imports)
+      call s:SortQuire_sort_clojure_fill(imports)
     endif
 
     normal! y%
@@ -53,21 +53,21 @@ endfunction
 
 function! s:SortQuire_sort_clojure()
   let l:current_register = @"
-  call Go_To_Require_Line()
+  call s:Go_To_Require_Line()
   normal! 0wy%
   let l:require_block = @0
   let reqs = strpart(l:require_block, 10, strlen(l:require_block) - 10)
   let arr_requires = split(reqs, "  ")
   let requires = sort(map(filter(copy(arr_requires), 'v:val != ""'), 'strpart(v:val, 0, strlen(v:val) - 1)'))
-  call Replace_Requires(requires)
+  call s:Replace_Requires(requires)
 
-  call Go_To_Require_Line()
+  call s:Go_To_Require_Line()
   normal! 0wy%
   execute "normal! \<c-v>\<s-%>="
 
   normal! gg
 
-  call SortQuire_sort_clojure_imports()
+  call s:SortQuire_sort_clojure_imports()
 
   if search(')\s\+)')
     %s/)\s\+)/))/g
