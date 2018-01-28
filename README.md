@@ -3,8 +3,15 @@ Sort-quire
 
 Plugin to sort require of Clojure(Script) files.
 
-## Usage
-Just call `SortQuire`
+Installation
+------------
+[vim-plug](https://github.com/junegunn/vim-plug)
+
+`Plug 'paulojean/sort-quire.vim'`
+
+Usage
+------------
+Just call `:SortQuire`
 
 ```clj
 ; Before
