@@ -31,6 +31,7 @@ function! s:Go_To_Require_Line()
 endfunction
 
 function! s:SortQuire_sort_clojure_imports()
+  normal! gg
   if search("(:import \[(|[\]")
     normal y%
     let l:import_block = @0
@@ -70,8 +71,6 @@ function! s:SortQuire_sort_clojure()
     normal! 0wy%
     execute "normal! \<c-v>\<s-%>="
   endif
-
-  normal! gg
 
   call s:SortQuire_sort_clojure_imports()
 
