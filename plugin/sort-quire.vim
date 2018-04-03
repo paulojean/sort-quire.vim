@@ -9,10 +9,6 @@ function! s:Select_namespace_sexp()
   normal! ggva(
 endfunction
 
-function! s:Break_line_on_import_sexp()
-  '<,'>s/ \+(/\r(/g
-endfunction
-
 function! s:SortQuire_sort_clojure_fill(items)
   normal! k
   let index = 1
@@ -49,7 +45,7 @@ function! s:SortQuire_sort_clojure_imports()
     if len(imports) <= 1
       execute "normal! d%i\r(:import " . get(imports, 0) . ")"
     else
-      execute "normal! d%i(:import " . get(imports, 0) . "\r"
+      execute "normal! d%i\r(:import " . get(imports, 0) . "\r"
       call s:SortQuire_sort_clojure_fill(imports)
     endif
 
@@ -78,10 +74,6 @@ function! s:SortQuire_sort_clojure()
   normal! gg
 
   call s:SortQuire_sort_clojure_imports()
-
-  call s:Select_namespace_sexp()
-  call s:Break_line_on_import_sexp()
-  execute "normal! \<esc>"
 
   call s:Select_namespace_sexp()
   normal! =
