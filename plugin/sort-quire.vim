@@ -5,6 +5,14 @@ command! SortQuire call s:SortQuire_sort()
 " Internal Functions:
 " ===================
 
+function! s:Select_namespace_sexp()
+  normal! ggva(
+endfunction
+
+function! s:Break_line_on_import_sexp()
+  '<,'>s/ \+(/\r(/g
+endfunction
+
 function! s:SortQuire_sort_clojure_fill(items)
   normal! k
   let index = 1
@@ -33,15 +41,15 @@ function! s:SortQuire_sort_clojure_imports()
     let imps = strpart(l:import_block, 9, strlen(l:import_block) - 8)
     let arr_imports = split(imps, "  ")
     let imports = sort(
-      \ map(map(filter(copy(arr_imports), 'v:val != ""'),
-      \         'strpart(v:val, 0, strlen(v:val) - 1)'),
+      \   map(
+      \     map(filter(copy(arr_imports), 'v:val != ""'),
+      \                'strpart(v:val, 0, strlen(v:val) - 1)'),
       \     'substitute(v:val, "^ ", "", "")'))
 
-    echo imports
     if len(imports) <= 1
       execute "normal! d%i\r(:import " . get(imports, 0) . ")"
     else
-      execute "normal! d%i\r(:import " . get(imports, 0) . "\r"
+      execute "normal! d%i(:import " . get(imports, 0) . "\r"
       call s:SortQuire_sort_clojure_fill(imports)
     endif
 
@@ -53,21 +61,30 @@ endfunction
 
 function! s:SortQuire_sort_clojure()
   let l:current_register = @"
-  call s:Go_To_Require_Line()
-  normal! 0wy%
-  let l:require_block = @0
-  let reqs = strpart(l:require_block, 10, strlen(l:require_block) - 10)
-  let arr_requires = split(reqs, "  ")
-  let requires = sort(map(filter(copy(arr_requires), 'v:val != ""'), 'strpart(v:val, 0, strlen(v:val) - 1)'))
-  call s:Replace_Requires(requires)
+  if search("(:require [")
+    call s:Go_To_Require_Line()
+    normal! 0wy%
+    let l:require_block = @0
+    let reqs = strpart(l:require_block, 10, strlen(l:require_block) - 10)
+    let arr_requires = split(reqs, "  ")
+    let requires = sort(map(filter(copy(arr_requires), 'v:val != ""'), 'strpart(v:val, 0, strlen(v:val) - 1)'))
+    call s:Replace_Requires(requires)
 
-  call s:Go_To_Require_Line()
-  normal! 0wy%
-  execute "normal! \<c-v>\<s-%>="
+    call s:Go_To_Require_Line()
+    normal! 0wy%
+    execute "normal! \<c-v>\<s-%>="
+  endif
 
   normal! gg
 
   call s:SortQuire_sort_clojure_imports()
+
+  call s:Select_namespace_sexp()
+  call s:Break_line_on_import_sexp()
+  execute "normal! \<esc>"
+
+  call s:Select_namespace_sexp()
+  normal! =
 
   if search(')\s\+)')
     %s/)\s\+)/))/g
